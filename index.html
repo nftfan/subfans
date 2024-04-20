@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFTFANS TOKEN SUBFAN LEADERBOARD</title>
+<style>
+    body {
+        background-color: #1e1e1e;
+        color: #777777;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        font-size: 10px;
+    }
+
+    #userDataForm {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    button {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        background-color: #333333;
+        color: #777777;
+        width: 300PX;
+        box-sizing: border-box;
+        font-size: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        background-color: #333333;
+        color: #777777;
+        font-size: 10px;
+    }
+
+    th, td {
+        border: 1px solid #444444;
+        text-align: left;
+        padding: 10px;
+    }
+
+    th {
+        background-color: #222222;
+    }
+
+    #userData {
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        background-color: #333333;
+    }
+
+    h1 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-size: 24px;
+        text-align: center;
+        color: #777777;
+    }
+
+    p {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 16px;
+        text-align: center;
+        color: #777777;
+    }
+</style>
+</head>
+<body>
+    <h1>NFTFANS TOKEN SUBFAN LEADERBOARD</h1>
+    <p>DO NOT UPDATE WRONG DATA YOU WILL BE BLOCKED FROM THE SYSTEM</p>
+
+    <form id="userDataForm">
+        <label for="walletAddress">Wallet Address:</label>
+        <input type="text" id="walletAddress" name="walletAddress" placeholder="Enter wallet address" pattern="^0x[a-fA-F0-9]{40}$" required>
+
+        <label for="subfanScore">Subfan Score:</label>
+        <input type="number" id="subfanScore" name="subfanScore" placeholder="Enter subfan score" pattern="[0-9]*" required>
+
+        <button type="button" onclick="updateData()">Update Data</button>
+    </form>
+
+    <div id="userData">
+        <h2>User Data:</h2>
+        <table id="userDataTable">
+            <tr>
+                <th>Wallet Address</th>
+                <th>Subfan Score</th>
+                <th>Earnings $</th>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        var userData = [];
+
+        function updateData() {
+            var walletAddress = document.getElementById("walletAddress").value;
+            var subfanScore = parseInt(document.getElementById("subfanScore").value);
+
+            // Check if the wallet address and subfan score are valid
+            var walletRegex = /^0x[a-fA-F0-9]{40}$/;
+            if (!walletRegex.test(walletAddress) || isNaN(subfanScore)) {
+                alert("Please enter a valid wallet address and subfan score.");
+                return;
+            }
+
+            var existingEntryIndex = userData.findIndex(entry => entry.walletAddress === walletAddress);
+
+            if (existingEntryIndex !== -1) {
+                userData[existingEntryIndex].subfanScore += subfanScore;
+            } else {
+                userData.push({ walletAddress: walletAddress, subfanScore: subfanScore });
+            }
+
+            // Sort the array by subfan score (descending order)
+            userData.sort((a, b) => b.subfanScore - a.subfanScore);
+
+            // Clear the table
+            var table = document.getElementById("userDataTable");
+            table.innerHTML = '<tr><th>Wallet Address</th><th>Subfan Score</th><th>Earnings $</th></tr>';
+
+            // Rebuild the table with sorted data
+            userData.forEach(entry => {
+                var row = table.insertRow();
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                cell1.innerHTML = entry.walletAddress;
+                cell2.innerHTML = entry.subfanScore;
+                cell3.innerHTML = (entry.subfanScore / 2000).toFixed(2);
+            });
+        }
+    </script>
+</body>
+</html>
